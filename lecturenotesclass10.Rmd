@@ -49,18 +49,25 @@ xtabs(~ Treatment + Improved, data = Arthritis) %>%
 ```
 
 - How many patients were enrolled in the clinical trial?
+    There were a total of 84 patients enrolled in the clinical trial
 
 - What is the probability a randomly selected patient received the placebo?
+    About 52% (Marginal Probability)
 
 - What is the probability a randomly selected patient received the placebo
   and had a marked improvement?
+    About 8.3% 
   
 - What is the probability a randomly selected patient received the placebo
   and the treatment?
+    0% - These are mutually exclusive events (Disjoin Probability - can't occur at same time)
   
 - What is the probability a randomly selected patient had some improvement or
   was on the treatment?
-
+    About 57.1%
+    
+3.1 and 3.2 of open intro stats
+  
 ## Using computer simulations to calculate probabilities
 
 #### Example
@@ -101,6 +108,8 @@ prop.table(counts)
 ```
 
 How close is this value to the "true" probability?
+
+This is pretty close to the "true" probability. With larger numbers for the sample size, it'll get closer and closer to the true percent.
 
 **To summarize our process:**
 
@@ -157,17 +166,30 @@ Perform a simulation to compute this empirical probability.
 
 Write down your guess to the answer before you calculate it.
 
+Guess: I predict that the absolute value in difference between the dice rolls will be equal to 4 more often than the square of dice roll 1 is equal to dice roll 2.
+
 ```{r simulate_rolls}
+dice <- c(1, 2, 3, 4, 5, 6)
+dice_rolls <- tibble (
+  die_1 = sample(dice, size = 10000, replace = TRUE),
+  die_2 = replicate(n = 10000, expr = sample(1:6, size = 1)) #either works
+)
 
 ```
 
 ```{r identify_events}
-
+dice_rolls <- dice_rolls %>%
+  mutate(is_square = die_1^2 == die_2,
+         diff = abs(die_1 - die_2) == 4)
 ```
 
 ```{r summarize_rolls}
-
+dice_rolls %>%
+  summarize(mean_square = mean(is_square),
+            mean_diff = mean(diff))
 ```
+
+Dice rolling with a diffrence of four is more common than dice rolling squares of die_1.
 
 ## Additional Resources-please look at before Weds.
 
